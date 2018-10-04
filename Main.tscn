@@ -1,0 +1,104 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://Main.gd" type="Script" id=1]
+[ext_resource path="res://assets/coin/Coin.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/grass.png" type="Texture" id=3]
+[ext_resource path="res://assets/player/Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://HUD.tscn" type="PackedScene" id=5]
+[ext_resource path="res://assets/audio/Coin.wav" type="AudioStream" id=6]
+[ext_resource path="res://assets/audio/Level.wav" type="AudioStream" id=7]
+[ext_resource path="res://assets/audio/Hit.wav" type="AudioStream" id=8]
+[ext_resource path="res://assets/audio/Powerup.wav" type="AudioStream" id=9]
+
+[node name="Main" type="Node"]
+
+script = ExtResource( 1 )
+Coin = ExtResource( 2 )
+Powerup = null
+playtime = 30
+
+[node name="Background" type="TextureRect" parent="." index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+texture = ExtResource( 3 )
+stretch_mode = 2
+
+[node name="Player" parent="." index="1" instance=ExtResource( 4 )]
+
+position = Vector2( 1.34694, 1.82466 )
+
+[node name="CoinContainer" type="Node" parent="." index="2"]
+
+[node name="PlayerStart" type="Position2D" parent="." index="3"]
+
+position = Vector2( 240, 350 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="GameTimer" type="Timer" parent="." index="4"]
+
+process_mode = 1
+wait_time = 1.0
+one_shot = false
+autostart = false
+
+[node name="HUD" parent="." index="5" instance=ExtResource( 5 )]
+
+[node name="PowerupTimer" type="Timer" parent="." index="6"]
+
+process_mode = 1
+wait_time = 1.0
+one_shot = true
+autostart = false
+
+[node name="CoinSound" type="AudioStreamPlayer" parent="." index="7"]
+
+stream = ExtResource( 6 )
+volume_db = 0.0
+pitch_scale = 1.0
+autoplay = false
+mix_target = 0
+bus = "Master"
+
+[node name="LevelSound" type="AudioStreamPlayer" parent="." index="8"]
+
+stream = ExtResource( 7 )
+volume_db = 0.0
+pitch_scale = 1.0
+autoplay = false
+mix_target = 0
+bus = "Master"
+
+[node name="EndSound" type="AudioStreamPlayer" parent="." index="9"]
+
+stream = ExtResource( 8 )
+volume_db = 0.0
+pitch_scale = 1.0
+autoplay = false
+mix_target = 0
+bus = "Master"
+
+[node name="PowSound" type="AudioStreamPlayer" parent="." index="10"]
+
+stream = ExtResource( 9 )
+volume_db = 0.0
+pitch_scale = 1.0
+autoplay = false
+mix_target = 0
+bus = "Master"
+
+[connection signal="area_entered" from="Player" to="." method="_on_Player_area_entered"]
+
+[connection signal="start_game" from="HUD" to="." method="new_game"]
+
+[connection signal="timeout" from="PowerupTimer" to="." method="_on_PowerupTimer_timeout"]
+
+

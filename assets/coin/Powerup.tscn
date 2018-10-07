@@ -12,7 +12,7 @@
 [ext_resource path="res://assets/pow/pow-frame-9.png" type="Texture" id=10]
 [ext_resource path="res://assets/pow/pow-frame-10.png" type="Texture" id=11]
 
-[sub_resource type="SpriteFrames" id=3]
+[sub_resource type="SpriteFrames" id=1]
 
 animations = [ {
 "frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ) ],
@@ -27,7 +27,7 @@ custom_solver_bias = 0.0
 radius = 25.0581
 
 [node name="Powerup" type="Area2D" groups=[
-"coins",
+"powerups",
 ]]
 
 input_pickable = true
@@ -38,6 +38,7 @@ angular_damp = 1.0
 audio_bus_override = false
 audio_bus_name = "Master"
 script = ExtResource( 1 )
+_sections_unfolded = [ "Transform" ]
 __meta__ = {
 "_edit_group_": true
 }
@@ -45,9 +46,8 @@ __meta__ = {
 [node name="AnimatedSprite" type="AnimatedSprite" parent="." index="0"]
 
 scale = Vector2( 0.5, 0.5 )
-frames = SubResource( 3 )
-animation = "shine"
-frame = 5
+frames = SubResource( 1 )
+animation = "default"
 playing = true
 _sections_unfolded = [ "Transform" ]
 __meta__ = {
@@ -64,7 +64,7 @@ __meta__ = {
 [node name="Lifetime" type="Timer" parent="." index="2"]
 
 process_mode = 1
-wait_time = 1.0
+wait_time = 3.0
 one_shot = true
 autostart = true
 
@@ -76,11 +76,10 @@ playback_speed = 1.0
 playback/active = false
 playback/repeat = false
 playback/speed = 1.0
+_sections_unfolded = [ "playback" ]
 
 [connection signal="area_entered" from="." to="." method="_on_Powerup_area_entered"]
 
 [connection signal="timeout" from="Lifetime" to="." method="_on_Lifetime_timeout"]
-
-[connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
 
 

@@ -5,14 +5,14 @@
 [ext_resource path="res://assets/player/idle/player-idle-2.png" type="Texture" id=3]
 [ext_resource path="res://assets/player/idle/player-idle-3.png" type="Texture" id=4]
 [ext_resource path="res://assets/player/idle/player-idle-4.png" type="Texture" id=5]
-[ext_resource path="res://assets/player/run/player-run-1.png" type="Texture" id=6]
-[ext_resource path="res://assets/player/run/player-run-2.png" type="Texture" id=7]
-[ext_resource path="res://assets/player/run/player-run-3.png" type="Texture" id=8]
-[ext_resource path="res://assets/player/run/player-run-4.png" type="Texture" id=9]
-[ext_resource path="res://assets/player/run/player-run-5.png" type="Texture" id=10]
-[ext_resource path="res://assets/player/run/player-run-6.png" type="Texture" id=11]
-[ext_resource path="res://assets/player/hurt/player-hurt-1.png" type="Texture" id=12]
-[ext_resource path="res://assets/player/hurt/player-hurt-2.png" type="Texture" id=13]
+[ext_resource path="res://assets/player/hurt/player-hurt-1.png" type="Texture" id=6]
+[ext_resource path="res://assets/player/hurt/player-hurt-2.png" type="Texture" id=7]
+[ext_resource path="res://assets/player/run/player-run-1.png" type="Texture" id=8]
+[ext_resource path="res://assets/player/run/player-run-2.png" type="Texture" id=9]
+[ext_resource path="res://assets/player/run/player-run-3.png" type="Texture" id=10]
+[ext_resource path="res://assets/player/run/player-run-4.png" type="Texture" id=11]
+[ext_resource path="res://assets/player/run/player-run-5.png" type="Texture" id=12]
+[ext_resource path="res://assets/player/run/player-run-6.png" type="Texture" id=13]
 
 [sub_resource type="SpriteFrames" id=1]
 
@@ -22,14 +22,14 @@ animations = [ {
 "name": "idle",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ) ],
-"loop": true,
-"name": "run",
-"speed": 8.0
-}, {
-"frames": [ ExtResource( 12 ), ExtResource( 13 ) ],
+"frames": [ ExtResource( 6 ), ExtResource( 7 ) ],
 "loop": true,
 "name": "hurt",
+"speed": 8.0
+}, {
+"frames": [ ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ) ],
+"loop": true,
+"name": "run",
 "speed": 8.0
 } ]
 _sections_unfolded = [ "Resource" ]
@@ -37,11 +37,11 @@ _sections_unfolded = [ "Resource" ]
 [sub_resource type="RectangleShape2D" id=2]
 
 custom_solver_bias = 0.0
-extents = Vector2( 10.3095, 9.40802 )
+extents = Vector2( 9.35932, 8.60105 )
 
 [node name="Player" type="Area2D"]
 
-scale = Vector2( 2, 2 )
+scale = Vector2( 3, 3 )
 input_pickable = true
 gravity_vec = Vector2( 0, 1 )
 gravity = 98.0
@@ -59,17 +59,16 @@ speed = 350
 [node name="AnimatedSprite" type="AnimatedSprite" parent="." index="0"]
 
 frames = SubResource( 1 )
-animation = "run"
+animation = "idle"
+frame = 2
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="1"]
 
-position = Vector2( -0.555035, 3.90994 )
+position = Vector2( -0.753644, 5.10158 )
 scale = Vector2( 0.957305, 1.28888 )
 shape = SubResource( 2 )
 
 [connection signal="area_entered" from="." to="." method="_on_Player_area_entered"]
-
-[connection signal="hurt" from="." to="." method="_on_Player_hurt"]
 
 

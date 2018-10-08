@@ -12,7 +12,7 @@ config_version=3
 
 config/name="Coin Dash - Training"
 run/main_scene="res://Main.tscn"
-config/icon="res://icon.png"
+config/icon="res://assets/coin/coin-frame-1.png"
 
 [display]
 

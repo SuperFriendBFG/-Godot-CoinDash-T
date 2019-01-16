@@ -10,6 +10,7 @@ var level
 var score
 var time_left
 var screensize
+# main loop variable
 var playing = false
 
 func _ready():

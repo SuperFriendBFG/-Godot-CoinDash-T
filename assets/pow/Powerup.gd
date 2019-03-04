@@ -1,35 +1,30 @@
 extends Area2D
 
-# used for generating random spawn locations based on x, y grid co-ordinates
-var screensize
+var screensize # Get Screensize Var for scriptes
 
 # init when powerup spawns
 func _ready(): 
-	# set anim frame to 0 and start
-	$AnimatedSprite.frame = 0	
-	$AnimatedSprite.play()
+	$AnimatedSprite.frame = 0	# Set Sprite Anim Frame to 0 (for looping)
+	$AnimatedSprite.play()		# Trigger Sprite Anim Start
 	# Tween is a built-in godot FX Still need to learn all the ways it can be used :)
-	$Tween.interpolate_property($AnimatedSprite, 'scale', $AnimatedSprite.scale,
-								$AnimatedSprite.scale * 3, 0.3, Tween.TRANS_QUAD,
-								Tween.EASE_IN_OUT)
-	$Tween.interpolate_property($AnimatedSprite, 'modulate', Color(1, 1, 1, 1),
-								Color(1, 1, 1, 0), 0.3, Tween.TRANS_QUAD,
-								Tween.EASE_IN_OUT)
+	$Tween.interpolate_property($AnimatedSprite, 'scale', $AnimatedSprite.scale,	# Scaling using Tween
+								$AnimatedSprite.scale * 3, 0.3, Tween.TRANS_QUAD,	# Scale Factor
+								Tween.EASE_IN_OUT)									# Ease Out of Scale Anim (Smoothness)
+	$Tween.interpolate_property($AnimatedSprite, 'modulate', Color(1, 1, 1, 1),		# Transparency using Tween
+								Color(1, 1, 1, 0), 0.3, Tween.TRANS_QUAD,			# Trans Factor
+								Tween.EASE_IN_OUT)									# Easy Out of Scale Anim (Smoothness)
 
 func pickup():
-	# basically starts the tween process (VFX) when it is picked up
-	monitoring = false
-	$Tween.start()
+	monitoring = false		# Tags for removal when picked up
+	$Tween.start()			# Starts Tween Anim when picked up
 	
 # detects when the Tween is completed and then Queues the Powerup for deletion (object and key are generic identifiers for the Tween's properties
 func _on_Tween_tween_completed(object, key):
 	queue_free()
 	
-# collision detection for the Powerup
-func _on_Powerup_area_entered(area):
-	if area.is_in_group("obstacles"):
-		position = Vector2(rand_range(0, screensize.x), rand_range(0, screensize.y))
+func _on_Powerup_area_entered(area): 	# Collision Detection in case PowerUp spawns inside a Cactus
+	if area.is_in_group("obstacles"):	# Define group "Obstacles" - Impassable by Player
+		position = Vector2(rand_range(0, screensize.x), rand_range(0, screensize.y))	# Redefined Position (NewPos)
 
-# called when Lifetime_timeout signal is received
-func _on_Lifetime_timeout():
+func _on_Lifetime_timeout(): # PowerUps have limited LifeTime, this gets called when that timer runs out
 	queue_free()

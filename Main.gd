@@ -1,113 +1,103 @@
 extends Node
-# adds coin to the inspector (Designer Defined)
-export (PackedScene) var Coin
-export (PackedScene) var Powerup
-# adds playtime to the inspector (Designer Defined)
-export (int) var playtime
+# Designer Defined Variables (Coins, Powerups, Playtime)
+export (PackedScene) var Coin		# Coins Per Level
+export (PackedScene) var Powerup	# Powerups Per Level
+export (int) var playtime			# Max Play Time per Level
 
 # establish Main vars (tracked throughout each session)
-var level
-var score
-var time_left
-var screensize
-# main loop variable
-var playing = false
+
+var level 				# Current Level
+var score 				# Current Score
+var time_left 			# Time Left (timer on HUD)
+var screensize 			# Engine Default Screen Size
+var playing = false 	# Global Variable for Playing True | False
 
 func _ready():
 	randomize()
 	screensize = get_viewport().get_visible_rect().size
 	$Player.screensize = screensize
-	# allows us to hide the player until game starts proper
-	$Player.hide()
+	$Player.hide()		# allows us to hide the player until game starts proper
 
 # starts a new game (attach here to add shortcuts / debug)
 func new_game():
-	# set "playing" state to true, other vars
-	playing = true
-	level = 1
-	score = 0
-	# sets the "Designer" defined variable to time_left
-	time_left = playtime
-	# initiates start function in the Player.gd script
-	$Player.start($PlayerStart.position)
-	# can show / hide elements in a scene at will...
-	$Player.show()
-	$GameTimer.start()
+	playing = true			# Set Playing to True
+	level = 1				# Code Controlled Level Select (1-X)
+	score = 0				# Reset starting score to 0
+	time_left = playtime	# Designer Defined Playtime (Check Level itself)
+	
+	# Init Player
+	$Player.start($PlayerStart.position)	# Spawns Player 
+	$Player.show()							# Show Player
+	$GameTimer.start()						# Start Game Timer (Count Up)
+	
 	# calls coin spawner
 	spawn_coins()
-	# update HUD
+	
+	# Init HUD (Update Score and Time Left)
 	$HUD.update_score(score)
 	$HUD.update_timer(time_left)
 
-# coin spawner
+# coin spawner Script
 func spawn_coins():
 	$LevelSound.play()
-	for i in range(4 + level): # difficulty multiplier / adjustment
-		var c = Coin.instance()
-		# spawns new coin child for each coin to be spawned
-		$CoinContainer.add_child(c)
-		c.screensize = screensize
-		# set pos (randomized)
-		c.position = Vector2(rand_range(0, screensize.x),
-		rand_range(0, screensize.y))
+	# Rules for Coin Spawning
+	for i in range(4 + level): 			# difficulty multiplier / adjustment
+		var c = Coin.instance()			# set instance of coin as "c"
+		$CoinContainer.add_child(c)		# spawns new coin child for each coin to be spawned
+		c.screensize = screensize		# Coin.screensize = screensize
+		c.position = Vector2(rand_range(0, screensize.x),	# Set Coin POS to Randomized(X)
+		rand_range(0, screensize.y))						# Set Coin POS to Randomized(Y)
 
 # Coin processing
 func _process(delta):
 	# keep track of current coins remaining
 	if playing and $CoinContainer.get_child_count() == 0:
-		level += 1
-		time_left += 5
-		spawn_coins()
-		$PowTimer.wait_time = rand_range(5, 10)
-		$PowTimer.start()
+		level += 1 		# Add +1 to Level Count for each new level
+		time_left += 5	# Amount of Time added to Each subsequent level		
+		spawn_coins()	# Call Spawn_Coins Script
+		$PowTimer.wait_time = rand_range(5, 10)		# Powerup Timer is on a Randomized Timer
+		$PowTimer.start()							# Start Timer 
 
-# timer processing (Gets Signal from GameTimer Node)
+# Timer Scripts (Gets Data from GameTimer Node)
 func _on_GameTimer_timeout():
-	time_left -= 1
-	$HUD.update_timer(time_left)
-	if time_left <= 0:
+	time_left -= 1					# Tick Timer down by -1
+	$HUD.update_timer(time_left)	# Update HUD with (time_left)	
+	if time_left <= 0:				# If Timer = 0 then Game Over
 		game_over()
 
 # matches whether pickup is coin or powerup (Gets Signal from Player Node)
 func _on_Player_pickup(type):
-	match type:
-		"coin":
-			score += 1
-			$CoinSound.play()
-			# update Score tally in HUD.gd script
-			$HUD.update_score(score)
-		"powerup":
-			time_left += 5
-			$PowerupSound.play()
-			# update HUD timer in HUD.gd script 
-			$HUD.update_timer(time_left)
+	match type: 						# Matches the Type to either Coin or Powerup. Any new Pickup Types go here
+		"coin":							# Type: Coin
+			score += 2					# Set Score to +1 for Each Coin. (Note: Can be altered)
+			$CoinSound.play()			# Play Coin Pickup Sound
+			$HUD.update_score(score)	# Update Score on the HUD
+		"powerup":							# Type: Powerup
+			time_left += 10					# Add +10 to TIme Left
+			score +- 5						# Add +5 to Score
+			$PowerupSound.play()			# Play PowerUp sound 
+			$HUD.update_timer(time_left)	# Update Timer on the HUD
+			$HUD.update_score(score)		# Update Score on the HUD
 
-# initiates game_over when player is hurt (1 life, Gets Signal from Player Node)
+# initiates game_over script when Player is hurt (Signal from Player Node. 1 Life)
 func _on_Player_hurt():
 	game_over()
 
-# game_over function called by _on_Player_hurt signal
+# Game_Over Script
 func game_over():
-	$EndSound.play()
-	# set "playing gamestate to false"
-	playing = false
-	$GameTimer.stop()
-	for coin in $CoinContainer.get_children():
-		coin.queue_free()
-	# call the show_came_over function in the HUD.gd script
-	$HUD.show_game_over()
-	# call the die function in the Player.gd script
-	$Player.die()
+	$EndSound.play()					# Trigger EndSound
+	playing = false						# Set Gamestate (playing) to False
+	$GameTimer.stop()					# Stop GameTimer
+	for coin in $CoinContainer.get_children(): 	# For All Coins
+		coin.queue_free()						# Delete Coins
+	$HUD.show_game_over() 						# Calls Game_Over Script
+	$Player.die()								# Calls Die Script
 	
-# on_PowTimer_timeout signal triggers this function call from the PowTimer node
-# Note that the timer is self contained within the Powerup.gd script
+# Powerup timer Timeout Script triggers when a PowerUp Times Out (Manages Powerup Respawn)
 func _on_PowTimer_timeout():
-	# create self contained variable, based on the Powerup / in a self contained instance
-	var p = Powerup.instance()
-	add_child(p)
-	# determine where the Powerup goes
-	p.screensize = screensize
-	# give Powerup a position
-	p.position = Vector2(rand_range(0, screensize.x),
-						 rand_range(0, screensize.y))
+	var p = Powerup.instance()				# Create a Powerup Instance
+	add_child(p)							# Add the Child
+	p.screensize = screensize				# Screensize Var for PowerUp
+	p.position = Vector2(rand_range(0, screensize.x),	# PowerUp X Position 
+						 rand_range(0, screensize.y))	# Powerup Y Position
 

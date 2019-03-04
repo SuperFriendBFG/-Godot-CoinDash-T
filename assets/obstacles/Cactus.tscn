@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://assets/cactus.png" type="Texture" id=1]
+[ext_resource path="res://assets/obstacles/cactus.png" type="Texture" id=1]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -11,6 +11,7 @@ extents = Vector2( 20.6653, 28.3531 )
 "obstacles",
 ]]
 
+position = Vector2( -1.10803, -1.10803 )
 input_pickable = true
 gravity_vec = Vector2( 0, 1 )
 gravity = 98.0
@@ -25,7 +26,8 @@ __meta__ = {
 
 [node name="Sprite" type="Sprite" parent="." index="0"]
 
-scale = Vector2( 0.1, 0.1 )
+position = Vector2( 0.0947439, -0.535219 )
+scale = Vector2( 0.104857, 0.103034 )
 texture = ExtResource( 1 )
 _sections_unfolded = [ "Transform" ]
 

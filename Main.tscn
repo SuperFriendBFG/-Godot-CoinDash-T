@@ -92,7 +92,7 @@ bus = "Master"
 
 [node name="Cactus" parent="." index="10" instance=ExtResource( 11 )]
 
-position = Vector2( 347.679, 255.574 )
+position = Vector2( 335.988, 257.244 )
 scale = Vector2( 2.5, 2.5 )
 
 [node name="PowTimer" type="Timer" parent="." index="11"]
